@@ -1,8 +1,28 @@
 {
     "dev": {
-        
+      "driver": "pg",
+      "filename": "~/dev.db"
     },
-    "production" : {
-
+  
+    "test": {
+      "driver": "pg",
+      "filename": ":memory:"
+    },
+  
+    "prod": {
+      "driver": "pg",
+      "user": "root",
+      "password": "root"
+    },
+  
+    "pg": {
+      "driver": "pg",
+      "user": "root",
+      "password": "123456",
+      "host": "localhost",
+      "database": "store",
+      "port": "5432",
+      "ssl": "true",
+      "schema": "my_schema"
     }
-}
+  }
