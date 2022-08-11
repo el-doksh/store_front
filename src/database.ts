@@ -14,7 +14,7 @@ const database = new Pool({
     host:DB_HOST,
     database:DB_NAME,
     user:DB_USER,
-    password:DB_PASSWORD
+    password:DB_PASSWORD,
 });
 
 export default database;

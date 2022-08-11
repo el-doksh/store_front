@@ -1,28 +1,29 @@
 {
     "dev": {
       "driver": "pg",
-      "filename": "~/dev.db"
+      "host": "127.0.0.1",
+      "database": "store",
+      "user": {"ENV": "DB_USER"},
+      "password": {"ENV": "DB_PASSWORD"},      
+      "port": "5432",
+      "schema": "public"
     },
-  
     "test": {
       "driver": "pg",
-      "filename": ":memory:"
+      "host": "127.0.0.1",
+      "database": "store",
+      "user": {"ENV": "DB_USER"},
+      "password": {"ENV": "DB_PASSWORD"},      
+      "port": "5432",
+      "schema": "public"
     },
-  
     "prod": {
       "driver": "pg",
-      "user": "root",
-      "password": "root"
-    },
-  
-    "pg": {
-      "driver": "pg",
-      "user": "root",
-      "password": "123456",
-      "host": "localhost",
+      "host": "127.0.0.1",
       "database": "store",
+      "user": {"ENV": "DB_USER"},
+      "password": {"ENV": "DB_PASSWORD"},      
       "port": "5432",
-      "ssl": "true",
-      "schema": "my_schema"
+      "schema": "public"
     }
   }

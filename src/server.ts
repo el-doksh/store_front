@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import database from './database';
 import cors from 'cors';
+import userRoutes from './routes/index';
 
 const app = express();
 const port : number = 3000;
@@ -16,11 +16,12 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions));
-
 app.use(bodyParser.json());
 
 app.get('/', (req: express.Request, res: express.Response) : void => {
     res.send('Server is running');
 });
+
+app.use(userRoutes);
 
 export default app;
