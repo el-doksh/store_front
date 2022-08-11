@@ -6,19 +6,103 @@ These are the notes from a meeting with the frontend developer that describe wha
 ## API Endpoints
 #### Products
 - Index 
+endpoint: '/products' [GET]
+description: get All products
+return: (200) array of objects of products
+
 - Show
+endpoint: '/products/:id' [GET] 
+description: Show product
+query parameters:
+    id (integer) => product id (required)   
+return: (200) object of product
+        (400) product not found
+
 - Create [token required]
-- [OPTIONAL] Top 5 most popular products 
-- [OPTIONAL] Products by category (args: product category)
+description: create Product
+endpoint: '/products' [POST] (token required) 
+body parameters:
+    name (string) => product name (required)   
+    price (float) =>  product price (required)
+    category (string) =>  category name (required)
+return: (200) object of created product
+        (400) error
+
+
+- Top 5 most popular products 
+endpoint: '/most_popular_products' [GET] 
+return: (200) array of objects of products
+        (400) error
+
+- Products by category
+endpoint: '/products/category/:name' [GET] 
+description: get products by category name:
+query parameters:
+    name (string) => category name that you want to filter with (required)
+return: (200) array of objects of products
+
 
 #### Users
 - Index [token required]
+endpoint: '/users' [GET] 
+return: (200) array of objects for users
+
 - Show [token required]
-- Create N[token required]
+endpoint: '/users/:id' [GET]
+query parameter: 
+    :id (int) => id of user 
+return: (200) object of user 
+        (400) user not found
+
+- Create
+endpoint: '/users' [POST] 
+body parameters:
+    first_name (string) => user first name (required)   
+    last_name (string) => user last name (required) 
+    password (string) =>  user password (required and should be greater than or equal 8 characher)
+return: (200) token
+        (400) error
+
+- Login
+endpoint: '/users/login' [POST] 
+body parameters:
+    first_name (string) => user first name (required)   
+    password (string) =>  user password (required)
+return: (200) token
+        (400) invalid first_name or password
 
 #### Orders
-- Current Order by user (args: user id)[token required]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]
+- Index:
+endpoint: '/orders' [GET] (token required)
+return: (200) array of objects of orders related to logged in user
+
+- Show: 
+endpoint: '/orders/:id' [GET]  (token required)
+query parameters:
+    id (integer) => order id (required)   
+return: (200) object of order of related logged in user
+        (400) order not found
+
+- completed orders:
+endpoint: '/orders_completed' [GET] (token required)
+return: (200) array of objects of completed orders related to logged in user
+
+- create Order:
+endpoint: '/orders' [POST] (token required) 
+body parameters:
+    status (string) => order status should be active/completed (required)
+return: (200) object of created order
+        (400) error
+
+- add product to order:
+
+endpoint: '/addProduct' [POST] (token required)
+body parameters: 
+    order_id (integer): order id (required),
+    product_id (integer): product id (required),
+    quantity (integer): quantity of product (required),
+return: (200) object of created order product
+        (400) error
 
 ## Data Shapes
 #### Product

@@ -9,8 +9,6 @@ export type User = {
 var pepper = process.env.BCRYPT_PASSWORD as string;
 
 export class UserModel {
-    
-
     async index(): Promise<User[]> {
         try {
             const conn = await database.connect();

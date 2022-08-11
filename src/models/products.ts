@@ -28,6 +28,7 @@ export class ProductModel {
                             left outer join order_products on order_products.product_id = products.id
                             group by products.id
                             order by quantity desc
+                            LIMIT 5
                             `;
             const result = await conn.query(sql);
             conn.release();

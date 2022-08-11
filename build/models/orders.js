@@ -57,7 +57,6 @@ class OrderModel {
     }
     async addProduct(quantity, orderId, productId) {
         try {
-            console.log(quantity, orderId, productId);
             const conn = await database_1.default.connect();
             const insertProductSql = 'INSERT INTO order_products (quantity, order_id, product_id) VALUES($1, $2, $3) RETURNING *';
             const result = await conn.query(insertProductSql, [quantity, orderId, productId]);
