@@ -12,6 +12,5 @@ const database = new pg_1.Pool({
     database: DB_NAME,
     user: DB_USER,
     password: DB_PASSWORD,
-    ssl: false
 });
 exports.default = database;

@@ -18,13 +18,33 @@ class ProductModel {
             throw new Error(`Cannot connect ${err}`);
         }
     }
+    async mostPopular() {
+        try {
+            const conn = await database_1.default.connect();
+            const sql = `SELECT products.*, sum(order_products.quantity) as quantity
+                            FROM products 
+                            left outer join order_products on order_products.product_id = products.id
+                            group by products.id
+                            order by quantity desc
+                            `;
+            const result = await conn.query(sql);
+            conn.release();
+            return result.rows;
+        }
+        catch (err) {
+            throw new Error(`Cannot connect ${err}`);
+        }
+    }
     async show(id) {
         try {
             const sql = 'SELECT * FROM products WHERE id=($1)';
             const conn = await database_1.default.connect();
             const result = await conn.query(sql, [id]);
             conn.release();
-            return result.rows[0];
+            if (result.rows.length > 0) {
+                return result.rows[0];
+            }
+            return null;
         }
         catch (err) {
             throw new Error(`Could not find Product ${id}. Error: ${err}`);
@@ -32,7 +52,7 @@ class ProductModel {
     }
     async create(product) {
         try {
-            const sql = 'INSERT INTO products (name, price, category) VALUES($1, $2, $3, $4) RETURNING *';
+            const sql = 'INSERT INTO products (name, price, category) VALUES($1, $2, $3) RETURNING *';
             const conn = await database_1.default.connect();
             const result = await conn.query(sql, [product.name, product.price, product.category]);
             const Product = result.rows[0];
@@ -43,17 +63,16 @@ class ProductModel {
             throw new Error(`Could not add new Product ${product.name}. Error: ${err}`);
         }
     }
-    async delete(id) {
+    async productsByCategory(category) {
         try {
-            const sql = 'DELETE FROM products WHERE id=($1)';
             const conn = await database_1.default.connect();
-            const result = await conn.query(sql, [id]);
-            const Product = result.rows[0];
+            const sql = 'SELECT * FROM products where category = ($1)';
+            const result = await conn.query(sql, [category]);
             conn.release();
-            return Product;
+            return result.rows;
         }
         catch (err) {
-            throw new Error(`Could not delete Product ${id}. Error: ${err}`);
+            throw new Error(`Cannot connect ${err}`);
         }
     }
 }

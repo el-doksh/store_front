@@ -1,7 +1,6 @@
 import database from '../database';
 
 export type Product = {
-    id: Number;
     name: String;
     price : Number;
     category : String;
@@ -21,13 +20,34 @@ export class ProductModel {
         }
     }
 
-    async show(id: string): Promise<Product> {
+    async mostPopular(): Promise<Product[]> {
+        try {
+            const conn = await database.connect();
+            const sql = `SELECT products.*, sum(order_products.quantity) as quantity
+                            FROM products 
+                            left outer join order_products on order_products.product_id = products.id
+                            group by products.id
+                            order by quantity desc
+                            `;
+            const result = await conn.query(sql);
+            conn.release();
+            return result.rows;
+        } catch (err) {
+            throw new Error (`Cannot connect ${err}`);
+        }
+    }
+
+    async show(id: number): Promise<Product | null> {
         try {
             const sql = 'SELECT * FROM products WHERE id=($1)'
             const conn = await database.connect()
             const result = await conn.query(sql, [id])
+            
             conn.release()
-            return result.rows[0]
+            if (result.rows.length > 0) {
+                return result.rows[0]
+            } 
+            return null;
         } catch (err) {
             throw new Error(`Could not find Product ${id}. Error: ${err}`)
         }
@@ -35,7 +55,7 @@ export class ProductModel {
     
     async create(product: Product): Promise<Product> {
         try {
-            const sql = 'INSERT INTO products (name, price, category) VALUES($1, $2, $3, $4) RETURNING *'
+            const sql = 'INSERT INTO products (name, price, category) VALUES($1, $2, $3) RETURNING *'
             const conn = await database.connect()            
             const result = await conn.query(sql, [product.name, product.price, product.category])
             const Product = result.rows[0]
@@ -46,16 +66,16 @@ export class ProductModel {
         }
     }
 
-    async delete(id: number): Promise<Product> {
+    async productsByCategory(category: string): Promise<Product[]> {
         try {
-            const sql = 'DELETE FROM products WHERE id=($1)'
-            const conn = await database.connect()
-            const result = await conn.query(sql, [id])
-            const Product = result.rows[0]
-            conn.release()
-            return Product
+            const conn = await database.connect();
+            const sql = 'SELECT * FROM products where category = ($1)';
+            const result = await conn.query(sql, [category])
+            conn.release();
+            return result.rows;
         } catch (err) {
-            throw new Error(`Could not delete Product ${id}. Error: ${err}`)
+            throw new Error (`Cannot connect ${err}`);
         }
     }
+    
 }

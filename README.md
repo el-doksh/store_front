@@ -15,40 +15,113 @@ Your application must make use of the following libraries:
 
 ## Steps to Completion
 
-### 1. Plan to Meet Requirements
+### 1. Installation steps:
 
-In this repo there is a `REQUIREMENTS.md` document which outlines what this API needs to supply for the frontend, as well as the agreed upon data shapes to be passed between front and backend. This is much like a document you might come across in real life when building or extending an API. 
+1- run "npm install" to install dependecies
+2- run "npm run start" to build and run the server at port 3000
+3- url server will be: http://localhost:3000
+4- make a copy of .env.example (located in root folder) then rename the new file to be (.env) and set your database configurations there
+5- add your database secret key on key  "BCRYPT_PASSWORD" and salt number on "SALT_ROUNDS" for password hashing in ".env" file
+6- add your token secret in key "TOKEN_SECRET" in ".env" file for jwt token
+7- run "db-migrate up" to create all tables in the connected database 
+8- run "npm run test" to test all apis 
 
-Your first task is to read the requirements and update the document with the following:
-- Determine the RESTful route for each endpoint listed. Add the RESTful route and HTTP verb to the document so that the frontend developer can begin to build their fetch requests.    
-**Example**: A SHOW route: 'blogs/:id' [GET] 
+### 2. APIs end points:
 
-- Design the Postgres database tables based off the data shape requirements. Add to the requirements document the database tables and columns being sure to mark foreign keys.   
-**Example**: You can format this however you like but these types of information should be provided
-Table: Books (id:varchar, title:varchar, author:varchar, published_year:varchar, publisher_id:string[foreign key to publishers table], pages:number)
+use the following apis to get and store data from database:
 
-**NOTE** It is important to remember that there might not be a one to one ratio between data shapes and database tables. Data shapes only outline the structure of objects being passed between frontend and API, the database may need multiple tables to store a single shape. 
+**Note** : each endpoint requires (token) you have to send it as a Bearer token in header request of the api
 
-### 2.  DB Creation and Migrations
+1- get All users:
+endpoint: '/users' [GET] (token required)
+return: (200) array of objects for users
 
-Now that you have the structure of the databse outlined, it is time to create the database and migrations. Add the npm packages dotenv and db-migrate that we used in the course and setup your Postgres database. If you get stuck, you can always revisit the database lesson for a reminder. 
+2- show user:
+endpoint: '/users/:id' [GET] (token required)
+query parameter: 
+    :id (int) => id of user 
+return: (200) object of user 
+        (400) user not found
 
-You must also ensure that any sensitive information is hashed with bcrypt. If any passwords are found in plain text in your application it will not pass.
+3- create user:
+endpoint: '/users' [POST] 
+body parameters:
+    first_name (string) => user first name (required)   
+    last_name (string) => user last name (required) 
+    password (string) =>  user password (required and should be greater than or equal 8 characher)
+return: (200) token
+        (400) error
 
-### 3. Models
+4- login:
+endpoint: '/users/login' [POST] 
+body parameters:
+    first_name (string) => user first name (required)   
+    password (string) =>  user password (required)
+return: (200) token
+        (400) invalid first_name or password
 
-Create the models for each database table. The methods in each model should map to the endpoints in `REQUIREMENTS.md`. Remember that these models should all have test suites and mocks.
+5- get All products:
+endpoint: '/products' [GET]
+return: (200) array of objects of products
 
-### 4. Express Handlers
+6- Show product:
+endpoint: '/products/:id' [GET] 
+query parameters:
+    id (integer) => product id (required)   
+return: (200) object of product
+        (400) product not found
 
-Set up the Express handlers to route incoming requests to the correct model method. Make sure that the endpoints you create match up with the enpoints listed in `REQUIREMENTS.md`. Endpoints must have tests and be CORS enabled. 
+7- get products by category name:
+endpoint: '/products/category/:name' [GET] 
+query parameters:
+    name (string) => category name that you want to filter with (required)
+return: (200) array of objects of products
 
-### 5. JWTs
+8- create Product:
+endpoint: '/products' [POST] (token required) 
+body parameters:
+    name (string) => product name (required)   
+    price (float) =>  product price (required)
+    category (string) =>  category name (required)
+return: (200) object of created product
+        (400) error
 
-Add JWT functionality as shown in the course. Make sure that JWTs are required for the routes listed in `REQUIUREMENTS.md`.
+9- Most popular products:
 
-### 6. QA and `README.md`
+endpoint: '/most_popular_products' [GET] 
+return: (200) array of objects of products
+        (400) error
 
-Before submitting, make sure that your project is complete with a `README.md`. Your `README.md` must include instructions for setting up and running your project including how you setup, run, and connect to your database. 
 
-Before submitting your project, spin it up and test each endpoint. If each one responds with data that matches the data shapes from the `REQUIREMENTS.md`, it is ready for submission!
+10- get All orders:
+endpoint: '/orders' [GET] (token required)
+return: (200) array of objects of orders related to logged in user
+
+11- Show order:
+endpoint: '/orders/:id' [GET]  (token required)
+query parameters:
+    id (integer) => order id (required)   
+return: (200) object of order of related logged in user
+        (400) order not found
+
+12- completed orders:
+endpoint: '/orders_completed' [GET] (token required)
+return: (200) array of objects of completed orders related to logged in user
+
+13- create Order:
+endpoint: '/orders' [POST] (token required) 
+body parameters:
+    status (string) => order status should be active/completed (required)
+return: (200) object of created order
+        (400) error
+
+14- add product to order:
+
+endpoint: '/addProduct' [POST] (token required)
+body parameters: 
+    order_id (integer): order id (required),
+    product_id (integer): product id (required),
+    quantity (integer): quantity of product (required),
+return: (200) object of created order product
+        (400) error
+

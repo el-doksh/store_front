@@ -1,32 +1,38 @@
 import express from 'express';
+import OrderController from '../handler/OrderController';
+import ProductController from '../handler/ProductController';
 import UserController from '../handler/UserController';
+import addProductValidator from '../middlewares/orders/addProductValidator';
+import craeteOrderValidator from '../middlewares/orders/craeteOrderValidator';
+import createProductValidator from '../middlewares/products/createProductValidator';
+import TokenValidator from '../middlewares/TokenValidator';
 import createUserValidator from '../middlewares/users/createUserValidator';
+import LoginValidator from '../middlewares/users/LoginValidator';
 
-const routes = express.Router();
+const router = express.Router();
 
-routes.get('/', (req, res) => {
-    res.send('Hello dokshoty');
-});
+//products routes
+const product = new ProductController();
+router.get('/products', product.index)
+router.get('/products/:id', product.show)
+router.get('/products/category/:name', product.productsByCategory)
+router.post('/products', TokenValidator, createProductValidator,product.create);
+router.get('/most_popular_products', product.mostPopular)
 
-const userRoutes = express.Router();
-const sUserController = new UserController();
-userRoutes.get('/users', sUserController.index)
-userRoutes.get('/users/:id', sUserController.show)
-userRoutes.post('/users', createUserValidator ,sUserController.create);
-userRoutes.delete('/users', sUserController.destroy)
+// user routes
+const user = new UserController();
+router.get('/users', TokenValidator, user.index)
+router.get('/users/:id', TokenValidator, user.show)
+router.post('/users', createUserValidator ,user.create);
+router.post('/users/login', LoginValidator, user.authenticate)
 
-export default userRoutes;
+// orders routes
+const order = new OrderController();
+router.get('/orders', TokenValidator, order.index)
+router.get('/orders/:id', TokenValidator, order.show)
+router.get('/orders_completed', TokenValidator, order.completed)
+router.post('/orders', TokenValidator, craeteOrderValidator, order.create);
+router.post('/addProduct', TokenValidator, addProductValidator, order.addProduct);
 
+export default router;
 
-
-// const router = express.Router();
-
-// router.get('/users', index)
-// router.get('/users/:id', show)
-// router.post('/users', create)
-// router.delete('/users', destroy)
-
-
-// routes.get('/students', students);
-
-// export default routes;

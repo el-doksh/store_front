@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
-const users_1 = __importDefault(require("./handler/users"));
+const index_1 = __importDefault(require("./routes/index"));
 const app = (0, express_1.default)();
 const port = 3000;
 app.listen(port, () => {
@@ -21,5 +21,5 @@ app.use(body_parser_1.default.json());
 app.get('/', (req, res) => {
     res.send('Server is running');
 });
-app.use(users_1.default);
+app.use(index_1.default);
 exports.default = app;
