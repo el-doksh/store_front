@@ -21,7 +21,7 @@ class ProductModel {
     async mostPopular() {
         try {
             const conn = await database_1.default.connect();
-            const sql = `SELECT products.*, sum(order_products.quantity) as quantity
+            const sql = `SELECT products.*, cast ( COALESCE( sum(order_products.quantity), 0) as int )  as quantity
                             FROM products 
                             left outer join order_products on order_products.product_id = products.id
                             group by products.id

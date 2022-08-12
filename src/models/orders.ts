@@ -1,14 +1,16 @@
 import database from '../database';
 
 export type Order = {
-    user_id: Number;
-    status : string; //active | completed
+    id? : number,
+    user_id: string,
+    status : string //active | completed
 }
 
 export type addProduct = {
-    quantity: Number;
-    order_id: Number;
-    product_id: Number;
+    id? : number,
+    quantity: number,
+    order_id: string,
+    product_id: string
 }
 
 export class OrderModel {
@@ -75,5 +77,5 @@ export class OrderModel {
         } catch (err) {
             throw new Error(`Could not add product ${productId} to order ${orderId}: ${err}`)
         }
-      }
+    }
 }

@@ -5,10 +5,73 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const server_1 = __importDefault(require("../../server"));
+const orders_1 = require("../orders");
+const usersSpec_1 = require("./usersSpec");
 const request = (0, supertest_1.default)(server_1.default);
-// status : completed
-describe('POST /orders without token return 401', () => {
-    it('responds with json', async () => {
+const orderModel = new orders_1.OrderModel();
+describe("Order Model", () => {
+    it('should have an index method', () => {
+        expect(orderModel.index).toBeDefined();
+    });
+    it('should have a completed method', () => {
+        expect(orderModel.completed).toBeDefined();
+    });
+    it('should have a show method', () => {
+        expect(orderModel.show).toBeDefined();
+    });
+    it('should have a create method', () => {
+        expect(orderModel.create).toBeDefined();
+    });
+    it('should have a addProduct method', () => {
+        expect(orderModel.addProduct).toBeDefined();
+    });
+    it('create method should return a list of orders', async () => {
+        const result = await orderModel.create({
+            user_id: '1',
+            status: 'completed'
+        });
+        expect(result).toEqual({
+            id: 1,
+            user_id: '1',
+            status: 'completed',
+        });
+    });
+    it('addProduct method should return a list of orders', async () => {
+        const result = await orderModel.addProduct(1, 1, 1);
+        expect(result).toEqual({
+            id: 1,
+            quantity: 1,
+            order_id: '1',
+            product_id: '1'
+        });
+    });
+    it('index method should return a list of orders', async () => {
+        const result = await orderModel.index(1);
+        expect(result).toEqual([{
+                id: 1,
+                user_id: '1',
+                status: 'completed',
+            }]);
+    });
+    it('completed method should return a list of orders', async () => {
+        const result = await orderModel.completed(1);
+        expect(result).toEqual([{
+                id: 1,
+                user_id: '1',
+                status: 'completed',
+            }]);
+    });
+    it('show method should return a list of orders', async () => {
+        const result = await orderModel.show(1, 1);
+        expect(result).toEqual({
+            id: 1,
+            user_id: '1',
+            status: 'completed',
+        });
+    });
+});
+describe('Orders API ', () => {
+    it('POST /orders without token return 401', async () => {
         const body = {
             "status": "completed"
         };
@@ -17,100 +80,47 @@ describe('POST /orders without token return 401', () => {
             .send(body)
             .expect(401);
     });
-});
-describe('POST /orders without status return 400 ', () => {
-    it('responds with json', async () => {
-        const login_credentials = {
-            "first_name": "Sherif Hesham",
-            "password": "12345678"
-        };
-        const response = await request.post('/users/login').set('Accept', 'application/json').send(login_credentials);
+    it('POST /orders without status return 400', async () => {
         await request.post('/orders')
-            .set('Authorization', `Bearer ${response.body}`)
+            .set('Authorization', `Bearer ${usersSpec_1.token}`)
             .expect(400);
     });
-});
-describe('POST /orders valid status return 200', () => {
-    it('responds with json', async () => {
-        const login_credentials = {
-            "first_name": "Sherif Hesham",
-            "password": "12345678"
-        };
-        const response = await request.post('/users/login').set('Accept', 'application/json').send(login_credentials);
+    it('POST /orders valid status return 200', async () => {
         const body = {
             "status": "completed"
         };
         await request.post('/orders')
-            .set('Authorization', `Bearer ${response.body}`)
+            .set('Authorization', `Bearer ${usersSpec_1.token}`)
             .send(body)
             .expect(200);
     });
-});
-describe('GET /orders expect 200', () => {
-    it('responds with json', async () => {
-        const login_credentials = {
-            "first_name": "Sherif Hesham",
-            "password": "12345678"
-        };
-        const response = await request.post('/users/login').set('Accept', 'application/json').send(login_credentials);
-        await request.get('/orders').set('Authorization', `Bearer ${response.body}`).expect(200);
+    it('GET /orders expect 200', async () => {
+        await request.get('/orders').set('Authorization', `Bearer ${usersSpec_1.token}`).expect(200);
     });
-});
-describe('GET /orders without token expect 401', () => {
-    it('responds with json', async () => {
+    it('GET /orders without token expect 401', async () => {
         await request.get('/orders').expect(401);
     });
-});
-describe('GET /orders/1 return 200', () => {
-    it('responds with json', async () => {
-        const login_credentials = {
-            "first_name": "Sherif Hesham",
-            "password": "12345678"
-        };
-        const response = await request.post('/users/login').set('Accept', 'application/json').send(login_credentials);
-        await request.get('/orders/1').set('Authorization', `Bearer ${response.body}`).expect(200);
+    it('GET /orders/1 return 200', async () => {
+        await request.get('/orders/1').set('Authorization', `Bearer ${usersSpec_1.token}`).expect(200);
     });
-});
-describe('GET /orders/1 without token expect 401', () => {
-    it('responds with json', async () => {
+    it('GET /orders/1 without token expect 401', async () => {
         await request.get('/orders/1').expect(401);
     });
-});
-describe('GET /orders/100 return 400', () => {
-    it('responds with json', async () => {
-        const login_credentials = {
-            "first_name": "Sherif Hesham",
-            "password": "12345678"
-        };
-        const response = await request.post('/users/login').set('Accept', 'application/json').send(login_credentials);
-        await request.get('/orders/100').set('Authorization', `Bearer ${response.body}`).expect(400);
+    it('GET /orders/100 return 400', async () => {
+        await request.get('/orders/100').set('Authorization', `Bearer ${usersSpec_1.token}`).expect(400);
     });
-});
-describe('GET /orders_completed return 200', () => {
-    it('responds with json', async () => {
-        const login_credentials = {
-            "first_name": "Sherif Hesham",
-            "password": "12345678"
-        };
-        const response = await request.post('/users/login').set('Accept', 'application/json').send(login_credentials);
-        await request.get('/orders_completed').set('Authorization', `Bearer ${response.body}`).expect(200);
+    it('GET /orders_completed return 200', async () => {
+        await request.get('/orders_completed').set('Authorization', `Bearer ${usersSpec_1.token}`).expect(200);
     });
-});
-describe('POST /addProduct valid status return 200', () => {
-    it('responds with json', async () => {
-        const login_credentials = {
-            "first_name": "Sherif Hesham",
-            "password": "12345678"
-        };
-        const response = await request.post('/users/login').set('Accept', 'application/json').send(login_credentials);
+    it('POST /addProduct return 400', async () => {
         const body = {
             "quantity": 5,
-            "product_id": 1,
-            "order_id": 1,
+            "order_id": 50,
+            "product_id": 12
         };
         await request.post('/addProduct')
-            .set('Authorization', `Bearer ${response.body}`)
+            .set('Authorization', `Bearer ${usersSpec_1.token}`)
             .send(body)
-            .expect(200);
+            .expect(400);
     });
 });

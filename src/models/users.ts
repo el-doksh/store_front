@@ -2,10 +2,12 @@ import database from '../database';
 import bcrypt from 'bcrypt';
 
 export type User = {
-    first_name: String;
-    last_name: String;
-    password : String;
+    id? : number,
+    first_name: String,
+    last_name: String,
+    password : String
 }
+
 var pepper = process.env.BCRYPT_PASSWORD as string;
 
 export class UserModel {
@@ -49,9 +51,8 @@ export class UserModel {
         }
     }
     
-    async create(u: User): Promise<void> {
+    async create(u: User): Promise<void|User> {
         try {
-            
             const sql = 'INSERT INTO users (first_name, last_name, password) VALUES($1, $2, $3) RETURNING *'
             const conn = await database.connect();
             const saltRounds = process.env.SALT_ROUNDS as string;
@@ -63,7 +64,6 @@ export class UserModel {
             throw new Error(`Could not add new User ${u.first_name}. Error: ${err}`)
         }
     }
-
   
     async authenticate(first_name: string, password: string) : Promise<User | null> {
         

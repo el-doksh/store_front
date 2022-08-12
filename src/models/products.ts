@@ -1,9 +1,11 @@
 import database from '../database';
 
 export type Product = {
-    name: String;
-    price : Number;
-    category : String;
+    id? : number,
+    name: String,
+    price : Number,
+    category : String,
+    quantity?: number
 }
 
 export class ProductModel {
@@ -23,7 +25,7 @@ export class ProductModel {
     async mostPopular(): Promise<Product[]> {
         try {
             const conn = await database.connect();
-            const sql = `SELECT products.*, sum(order_products.quantity) as quantity
+            const sql = `SELECT products.*, cast ( COALESCE( sum(order_products.quantity), 0) as int )  as quantity
                             FROM products 
                             left outer join order_products on order_products.product_id = products.id
                             group by products.id

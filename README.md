@@ -26,3 +26,4 @@ port 5432 is default port for postgres
 6- run "npm run start" to build and run the server at port 3000
 7- url server will be: http://localhost:3000
 8- run "npm run test" to test all apis 
+9- set env variable on .env file ('test' : for testing,'dev' : for deveoplment  )
