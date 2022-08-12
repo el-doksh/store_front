@@ -66,17 +66,20 @@ export class UserModel {
     }
   
     async authenticate(first_name: string, password: string) : Promise<User | null> {
-        
-        const sql = 'select password from users where first_name = $1';
-        const conn = await database.connect();
-        const result = await conn.query(sql, [first_name]);
-
-        if(result.rows.length > 0) {
-            const user = result.rows[0]
-            if (bcrypt.compareSync(password+pepper, user.password)) {
-                return user
+        try {
+            const sql = 'select password from users where first_name = $1';
+            const conn = await database.connect();
+            const result = await conn.query(sql, [first_name]);
+    
+            if(result.rows.length > 0) {
+                const user = result.rows[0]
+                if (bcrypt.compareSync(password+pepper, user.password)) {
+                    return user
+                }
             }
+            return null;
+        } catch (err) {
+            throw new Error(`Could not authenticate  User`)
         }
-        return null;
     }
 }

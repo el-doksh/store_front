@@ -3,6 +3,10 @@ The company stakeholders want to create an online storefront to showcase their g
 
 These are the notes from a meeting with the frontend developer that describe what endpoints the API needs to supply, as well as data shapes the frontend and backend have agreed meet the requirements of the application. 
 
+## Database info
+
+database schema should be "public" in port "5432"
+
 ## API Endpoints
 #### Products
 - Index 
@@ -104,23 +108,29 @@ body parameters:
 return: (200) object of created order product
         (400) error
 
-## Data Shapes
-#### Product
--  id
-- name
-- price
-- [OPTIONAL] category
+## Data Shapes (Tables)
+database schema : "public" 
+database port "5432"
 
-#### User
-- id
-- firstName
-- lastName
-- password
+#### products
+-  id [integer] (primary key auto increment)
+- name [varchar(255)]
+- price [double]
+- category [varchar(255)]
 
-#### Orders
-- id
-- id of each product in the order
-- quantity of each product in the order
-- user_id
-- status of order (active or complete)
+#### users
+- id [integer] (primary key auto increment)
+- first_name [varchar(100)]
+- last_name [varchar(100)]
+- password  [varchar(255)]
 
+#### orders table
+- id [integer] (primary key auto increment)
+- user_id [bigint] (foreign key for users table)
+- status of order  [varchar(45)] (should beactive or completed)
+
+### order_products
+- id [integer] (primary key auto increment)
+- order_id [bigint] (foreign key for orders table)
+- product_id [bigint] (foreign key for products table)
+- quantity [integer]

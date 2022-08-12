@@ -6,26 +6,37 @@ const orderModel = new OrderModel()
 export default class OrderController {
 
     async index (req: Request, res: Response) : Promise<void> {
-        const orders = await orderModel.index(parseInt(res.locals.user.id))
-        res.json(orders)
+        try {
+            const orders = await orderModel.index(parseInt(res.locals.user.id))
+            res.json(orders)
+        } catch(err) {
+            res.status(400).json(err)
+        }
     }
 
     async completed (req: Request, res: Response) : Promise<void> {
-        const orders = await orderModel.completed(parseInt(res.locals.user.id))
-        res.json(orders)
+        try {
+            const orders = await orderModel.completed(parseInt(res.locals.user.id))
+            res.json(orders)
+        } catch(err) {
+            res.status(400).json(err)
+        }
     }
 
     async show (req : Request, res: Response) : Promise<void>{
+        try {
+            const order = await orderModel.show(parseInt(req.params.id), parseInt(res.locals.user.id)).catch((err) => {
 
-        const order = await orderModel.show(parseInt(req.params.id), parseInt(res.locals.user.id)).catch((err) => {
-
-            res.status(400)
-            res.json(err)
-        })
-        if (order) {
-            res.json(order)
-        } else {
-            res.status(400).json("Order not found")
+                res.status(400)
+                res.json(err)
+            })
+            if (order) {
+                res.json(order)
+            } else {
+                res.status(400).json("Order not found")
+            }
+        } catch(err) {
+            res.status(400).json(err)
         }
     }
 
@@ -43,8 +54,7 @@ export default class OrderController {
             })
             res.json(neworder);
         } catch(err) {
-            res.status(400)
-            res.json(err)
+            res.status(400).json(err)
         }
     }
 
@@ -60,13 +70,11 @@ export default class OrderController {
 
                 res.json(newOrderProduct);
             } else {
-                res.status(400)
-                res.json("Error while creating order");
+                res.status(400).json("Error while creating order");
                 return;
             }
         } catch(err) {
-            res.status(400)
-            res.json(err)
+            res.status(400).json(err)
         }
     }
     
