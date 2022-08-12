@@ -8,7 +8,7 @@ const request = supertest(app);
 const orderModel = new OrderModel();
 
 
-describe("Order Model", () => {
+describe("Order Model", () : void => {
     it('should have an index method', () : void => {
         expect(orderModel.index).toBeDefined();
     });
@@ -79,8 +79,8 @@ describe("Order Model", () => {
     });
 });
 
-describe('Orders API ', () => {
-    it('POST /orders without token return 401', async () => {
+describe('Orders API ', () : void => {
+    it('POST /orders without token return 401', async () :Promise<void> => {
         const body = {
             "status" : "completed"
         };
@@ -90,13 +90,13 @@ describe('Orders API ', () => {
             .expect(401)
     });
     
-    it('POST /orders without status return 400', async () => {
+    it('POST /orders without status return 400', async () :Promise<void> => {
         await request.post('/orders')
             .set('Authorization', `Bearer ${token}`)
             .expect(400)
     });
     
-    it('POST /orders valid status return 200', async () => {
+    it('POST /orders valid status return 200', async () :Promise<void> => {
         const body = {   
             "status" : "completed"
         };
@@ -106,31 +106,31 @@ describe('Orders API ', () => {
             .expect(200)
     });
     
-    it('GET /orders expect 200', async () => {
+    it('GET /orders expect 200', async () :Promise<void> => {
         await request.get('/orders').set('Authorization', `Bearer ${token}`).expect(200);
     });
     
-    it('GET /orders without token expect 401', async () => {
+    it('GET /orders without token expect 401', async () :Promise<void> => {
         await request.get('/orders').expect(401);
     });
     
-    it('GET /orders/1 return 200', async () => {
+    it('GET /orders/1 return 200', async () :Promise<void> => {
         await request.get('/orders/1').set('Authorization', `Bearer ${token}`).expect(200);
     });
     
-    it('GET /orders/1 without token expect 401', async () => {
+    it('GET /orders/1 without token expect 401', async () :Promise<void> => {
         await request.get('/orders/1').expect(401);
     });
     
-    it('GET /orders/100 return 400', async () => {
+    it('GET /orders/100 return 400', async () :Promise<void> => {
         await request.get('/orders/100').set('Authorization', `Bearer ${token}`).expect(400);
     });
     
-    it('GET /orders_completed return 200', async () => {
+    it('GET /orders_completed return 200', async () :Promise<void> => {
         await request.get('/orders_completed').set('Authorization', `Bearer ${token}`).expect(200);
     });
     
-    it('POST /addProduct return 400', async () => {
+    it('POST /addProduct return 400', async () :Promise<void> => {
         const body = {
             "quantity" : 5,
             "order_id" : 50,

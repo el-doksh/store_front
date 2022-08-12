@@ -31,7 +31,7 @@ beforeAll(async () : Promise<void> => {
 
 });
 
-describe("User Model", () => {
+describe("User Model", () : void => {
     it('should have an index method', () : void => {
         expect(userModel.index).toBeDefined();
     });
@@ -90,7 +90,7 @@ describe("User Model", () => {
 });
 
 describe('Users APIs ', () => {
-    it('POST /users password less than 8 char return 400 ', async () => {
+    it('POST /users password less than 8 char return 400 ', async () :Promise<void> => {
         const body = {
             "first_name" : "Sherif Hesham",
             "last_name" : "El doksh",
@@ -102,7 +102,7 @@ describe('Users APIs ', () => {
             .expect(400)        
     });
 
-    it('POST /users first name not snet return 400', async () => {
+    it('POST /users first name not snet return 400', async ():Promise<void> => {
         const body = {   
             "last_name" : "El doksh",
             "password" : "1234567"
@@ -113,7 +113,7 @@ describe('Users APIs ', () => {
             .expect(400)
     });
 
-    it('POST /users last name not snet return 400 ', async () => {
+    it('POST /users last name not snet return 400 ', async ():Promise<void> => {
         const body = {
             "first_name" : "El doksh",
             "password" : "1234567"
@@ -124,7 +124,7 @@ describe('Users APIs ', () => {
             .expect(400)
     });
     
-    it('POST /users/login login with created user return 200', async () => {
+    it('POST /users/login login with created user return 200', async () :Promise<void>=> {
         const body = {   
             "first_name" : "Sherif Hesham",
             "password" : "12345678"
@@ -135,7 +135,7 @@ describe('Users APIs ', () => {
             .expect(200)
     });
     
-    it('POST /users/login login incoreect credentials return 400', async () => {
+    it('POST /users/login login incoreect credentials return 400', async ():Promise<void> => {
         const body = {   
             "first_name" : "Sherif",
             "password" : "12345"
@@ -146,20 +146,20 @@ describe('Users APIs ', () => {
             .expect(400)
     });
     
-    it('GET /users return 401 without token', async () => {
+    it('GET /users return 401 without token', async ():Promise<void> => {
         await request.get('/users').expect(401);
     });
     
-    it('GET /users return 200 with valid token', async () => {
+    it('GET /users return 200 with valid token', async () :Promise<void>=> {
         const res = await request.get('/users').set('Authorization', `Bearer ${token}`) 
         expect(res.status).toEqual(200)
     });
     
-    it('GET /users/1 return 401 without token', async () => {
+    it('GET /users/1 return 401 without token', async ():Promise<void> => {
         await request.get('/users/1').expect(401);
     });
     
-    it('GET /users/1 return 200 with valid token', async () => {
+    it('GET /users/1 return 200 with valid token', async ():Promise<void> => {
         const res = await request.get('/users/1').set('Authorization', `Bearer ${token}`) 
         expect(res.status).toEqual(200)
     });

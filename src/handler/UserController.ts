@@ -11,7 +11,7 @@ export default class UserController {
         res.json(users)
     }
 
-    async show (req : Request, res: Response) {
+    async show (req : Request, res: Response): Promise<void> {
 
         const user = await userModel.show(req.params.id).catch((err) => {
 
@@ -28,7 +28,7 @@ export default class UserController {
         }
     }
 
-    async create (req: Request, res: Response)  {
+    async create (req: Request, res: Response): Promise<void>  {
         try {
             const user: User = {
                 first_name: req.body.first_name,

@@ -15,7 +15,7 @@ export default class OrderController {
         res.json(orders)
     }
 
-    async show (req : Request, res: Response) {
+    async show (req : Request, res: Response) : Promise<void>{
 
         const order = await orderModel.show(parseInt(req.params.id), parseInt(res.locals.user.id)).catch((err) => {
 
@@ -29,7 +29,7 @@ export default class OrderController {
         }
     }
 
-    async create (req: Request, res: Response)  {
+    async create (req: Request, res: Response) : Promise<void> {
         try {
             const order: Order = {
                 user_id : res.locals.user.id,
@@ -49,7 +49,7 @@ export default class OrderController {
     }
 
     
-    async addProduct (req: Request, res: Response)  {
+    async addProduct (req: Request, res: Response) : Promise<void> {
         try {
             const newOrderProduct = await orderModel.addProduct( parseInt(req.body.quantity), parseInt(req.body.order_id), parseInt(req.body.product_id)).catch((err) => {
                 res.status(400)

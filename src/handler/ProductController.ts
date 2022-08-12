@@ -15,7 +15,7 @@ export default class ProductController {
         res.json( products)
     }
     
-    async show (req : Request, res: Response) {
+    async show (req : Request, res: Response) : Promise<void>{
 
         const product = await productModel.show(parseInt(req.params.id)).catch((err) => {
             res.status(400).json(err)
@@ -27,7 +27,7 @@ export default class ProductController {
         }
     }
 
-    async create (req: Request, res: Response)  {
+    async create (req: Request, res: Response): Promise<void>  {
         try {
             const product: Product = {
                 name: req.body.name,
@@ -43,7 +43,7 @@ export default class ProductController {
         }
     }
 
-    async productsByCategory(req: Request, res: Response) {
+    async productsByCategory(req: Request, res: Response) : Promise<void>{
         const products = await productModel.productsByCategory(req.params.name)
         res.json( products)
     }

@@ -8,7 +8,7 @@ const request = supertest(app);
 const productModel = new ProductModel()
 
 
-describe("Product Model", () => {
+describe("Product Model", () :void=> {
     it('should have an index method', () : void => {
         expect(productModel.index).toBeDefined();
     });
@@ -62,8 +62,8 @@ describe("Product Model", () => {
     });
 });
 
-describe('Products API ', () => {
-    it('POST /products without token return 401', async () => {
+describe('Products API ', () :void=> {
+    it('POST /products without token return 401', async () :Promise<void>=> {
         const body = {   
             "name" : "product 1",
             "price" : 50,
@@ -75,7 +75,7 @@ describe('Products API ', () => {
             .expect(401)
     });
 
-    it('POST /products wrong price return 400', async () => {
+    it('POST /products wrong price return 400', async ():Promise<void> => {
         const body = {   
             "name" : "product 1",
             "price" : "string price",
@@ -87,7 +87,7 @@ describe('Products API ', () => {
             .expect(400)
     });
     
-    it('POST /products no name return 400', async () => {
+    it('POST /products no name return 400', async ():Promise<void> => {
         
         const body = {   
             "price" : "string price",
@@ -100,7 +100,7 @@ describe('Products API ', () => {
                     .expect(400)
     });
     
-    it('POST /products no price return 400', async () => {
+    it('POST /products no price return 400', async ():Promise<void> => {
         const body = {
             "name" : "prodct",
             "category" : "category"
@@ -112,7 +112,7 @@ describe('Products API ', () => {
             .expect(400)
     });
     
-    it('POST /products no category return 400', async () => {
+    it('POST /products no category return 400', async ():Promise<void> => {
         const body = {   
             "name" : "name",
             "price" : 40
@@ -123,7 +123,7 @@ describe('Products API ', () => {
             .expect(400)
     });
     
-    it('POST /products valid request return 200', async () => {
+    it('POST /products valid request return 200', async ():Promise<void> => {
         
         const body = {   
             "name" : "Iphone",
@@ -137,23 +137,23 @@ describe('Products API ', () => {
             .expect(200)
     });
     
-    it('GET /products expect 200', async () => {
+    it('GET /products expect 200', async ():Promise<void> => {
         await request.get('/products').expect(200);
     });
     
-    it('GET /products/1 return 200', async () => {
+    it('GET /products/1 return 200', async ():Promise<void> => {
         await request.get('/products/1').expect(200);
     });
     
-    it('GET /products/100 return 400', async () => {
+    it('GET /products/100 return 400', async ():Promise<void> => {
         await request.get('/products/100').expect(400)
     });
     
-    it('GET /most_popular_products return 200', async () => {
+    it('GET /most_popular_products return 200', async ():Promise<void> => {
         await request.get('/most_popular_products').expect(200)
     });
     
-    it('GET /products/category/Mobiles return 200', async () => {
+    it('GET /products/category/Mobiles return 200', async ():Promise<void> => {
         await request.get('/products/category/Mobiles').expect(200);
     });
 });
